@@ -7,8 +7,7 @@ package cli;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jdk.nashorn.internal.runtime.ParserException;
-import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
@@ -20,31 +19,77 @@ import org.apache.commons.cli.ParseException;
  */
 public class CommandLineOption {
 
-    private Options options;
-    private CommandLine cmd;
-    private CommandLineParser parser;
+    public static final Options options = new Options();
+    public static CommandLine commandLineArgs;
+    public static final CommandLineParser parser = new DefaultParser();
 
-    public CommandLineOption(String[] args) {
-        parser = new BasicParser();
+    public static Options getCLOptions() {
 
-        this.options = new Options();
-        defineOptions();
-        boolean checkCLOptions = checkCLOptions(args);
-        
+        options.addOption("m", "mode", true, "1,2 or 3");
+        options.addOption("t", "type", true, "type: single or paired-end");
+        options.addOption("cA", "condA", true, "contidion A");
+        options.addOption("cB", "condB", true, "contidion B");
+
+        options.addOption("db", "database", true, "the database to map with");
+        options.addOption("o", "outdir", true, "the output directory");
+        options.addOption("t", "threads", true, "maximal number of threads to be used");
+        options.addOption("i", "input", true, "input directory containing the inputfile");
+
+        //OptionGroup opttionGroup = new OptionGroup();
+        return options;
+
     }
 
-    private void defineOptions() {
-        this.options.addOption("m", "mode", true, "1,2 or 3");
-        this.options.addOption("t", "type", true, "type: single or paired-end");
-        this.options.addOption("cA", "condA", true, "contidion A");
-        this.options.addOption("cB", "condB", true, "contidion B");
-
-    }
-
-    private boolean checkCLOptions(String[] args) {
-      
+    public static boolean checkCLArgument(String[] args) {
+        getCLOptions();
         try {
-            this.cmd = this.parser.parse(options, args);
+
+            commandLineArgs = parser.parse(options, args);
+
+            if (!commandLineArgs.hasOption("db")) {
+                System.out.println("please specify the database");
+                System.exit(0);
+            }
+            if (!commandLineArgs.hasOption("mode")) {
+                System.out.println("please specify mode");
+                System.exit(0);
+            }
+            if (!commandLineArgs.hasOption("type")) {
+                System.out.println("please specify type");
+                System.out.println("--type = [single|paired]");
+                System.exit(0);
+            }
+            int mode = Integer.parseInt(commandLineArgs.getOptionValue("mode"));
+            switch (mode) {
+                case 1: {
+                    if (!commandLineArgs.hasOption("input")) {
+                        System.out.println("please specify the inputfile");
+                        System.exit(0);
+                    }
+                    break;
+                }
+                case 2: {
+                    if (!commandLineArgs.hasOption("condA")) {
+                        System.out.println("please specify the condition A");
+                        System.exit(0);
+                    }
+                    break;
+
+                }
+                case 3: {
+                    if (!commandLineArgs.hasOption("condB")) {
+                        System.out.println("please specify the condition B");
+                        System.exit(0);
+                    }
+                    break;
+                }
+                default: {
+                    System.out.println("unknown mode");
+                    System.exit(0);
+                }
+                break;
+            }
+
         } catch (ParseException ex) {
             Logger.getLogger(CommandLineOption.class.getName()).log(Level.SEVERE, null, ex);
             return false;

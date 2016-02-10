@@ -5,6 +5,8 @@
  */
 package tfcmrs;
 
+import cli.CommandLineOption;
+
 /**
  *
  * @author elmarce
@@ -15,9 +17,15 @@ public class Tfcmrs {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        for (int i = 0; i < 10; i++) {
-            System.out.println("hello world");
+        try {
+            if (CommandLineOption.checkCLArgument(args)) {
+                System.out.println("-db = " + CommandLineOption.commandLineArgs.getOptionValue("db"));
+                System.out.println("successful");
+            }
+        } catch (Exception e) {
+            System.out.println("EXCEPTION : "+e.getMessage());
         }
+
     }
-    
+
 }
