@@ -15,7 +15,7 @@ import org.apache.commons.cli.CommandLine;
  */
 public class InputDataModel {
 
-    private String[] args;
+    private final String[] args;
     private CommandLine commandLineArgs;
     private MainGui gui;
 

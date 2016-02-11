@@ -8,6 +8,7 @@ package tools;
 import dataModel.InputDataModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mode.RunningMode;
 import org.apache.commons.cli.CommandLine;
 
 /**
@@ -18,9 +19,14 @@ public class ToolAsCL {
 
     //private String[] args;
     private final InputDataModel IDM;
+    /**
+     * The running mode
+     */
+    private final RunningMode RM;
 
     public ToolAsCL(InputDataModel idm) {
         this.IDM = idm;
+        this.RM = new RunningMode(idm);
     }
 
     public void runAsCLTool() {
@@ -30,15 +36,15 @@ public class ToolAsCL {
                 int mode = Integer.parseInt(commandLineArgs.getOptionValue("mode"));
                 switch (mode) {
                     case 1: {
-
+                        this.RM.mode1();
                         break;
                     }
                     case 2: {
-
+                        this.RM.mode2();
                         break;
                     }
                     case 3: {
-
+                        this.RM.mode3();
                         break;
                     }
                     default: {

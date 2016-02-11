@@ -11,26 +11,28 @@ import dataModel.InputDataModel;
  *
  * @author elmarce
  */
-public class RunningMode implements RunningModeInterface{
-    private InputDataModel idm;
-    
-    public RunningMode(){
-        //idm = new InputDataModel();
+public class RunningMode implements RunningModeInterface {
+
+    private final InputDataModel IDM;
+
+    public RunningMode(InputDataModel idm) {
+        this.IDM = idm;
     }
 
     @Override
     public void mode1() {
-   
+        System.out.println("Mode 1");
     }
 
     @Override
     public void mode2() {
-  
+        System.out.println("Mode 2");
     }
 
     @Override
     public void mode3() {
+        System.out.println("Mode 3");
         String mapperCommand = null;
     }
-    
+
 }

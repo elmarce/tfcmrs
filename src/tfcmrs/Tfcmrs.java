@@ -5,8 +5,8 @@
  */
 package tfcmrs;
 
-import cli.CommandLineOption;
 import dataModel.InputDataModel;
+import tools.ToolAsCL;
 
 /**
  *
@@ -20,6 +20,8 @@ public class Tfcmrs {
     public static void main(String[] args) {
         try {
             InputDataModel idm = new InputDataModel(args);
+            ToolAsCL clTool = new ToolAsCL(idm);
+            clTool.runAsCLTool();
         } catch (Exception e) {
             System.out.println("EXCEPTION : "+e.getMessage());
         }
