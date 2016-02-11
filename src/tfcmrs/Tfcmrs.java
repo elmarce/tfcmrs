@@ -6,6 +6,7 @@
 package tfcmrs;
 
 import cli.CommandLineOption;
+import dataModel.InputDataModel;
 
 /**
  *
@@ -18,10 +19,7 @@ public class Tfcmrs {
      */
     public static void main(String[] args) {
         try {
-            if (CommandLineOption.checkCLArgument(args)) {
-                System.out.println("-db = " + CommandLineOption.commandLineArgs.getOptionValue("db"));
-                System.out.println("successful");
-            }
+            InputDataModel idm = new InputDataModel(args);
         } catch (Exception e) {
             System.out.println("EXCEPTION : "+e.getMessage());
         }

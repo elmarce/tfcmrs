@@ -15,7 +15,7 @@ public class RunningMode implements RunningModeInterface{
     private InputDataModel idm;
     
     public RunningMode(){
-        idm = new InputDataModel();
+        //idm = new InputDataModel();
     }
 
     @Override

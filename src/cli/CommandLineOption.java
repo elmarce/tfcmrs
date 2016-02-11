@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
@@ -35,7 +37,14 @@ public class CommandLineOption {
         options.addOption("t", "threads", true, "maximal number of threads to be used");
         options.addOption("i", "input", true, "input directory containing the inputfile");
 
-        //OptionGroup opttionGroup = new OptionGroup();
+        OptionGroup optionGroup = new OptionGroup();
+        //options.addOption("g", "gui", false, "starts the grafical user interface");
+        Option guiOption = new Option("g", "gui", false, "starts the grafical user interface");
+        Option help = new Option("h", "help", false, "shows help message");
+        optionGroup.addOption(guiOption);
+
+        options.addOptionGroup(optionGroup);
+
         return options;
 
     }
@@ -45,49 +54,55 @@ public class CommandLineOption {
         try {
 
             commandLineArgs = parser.parse(options, args);
+            if (commandLineArgs.getOptions().length <= 0) {
+                System.out.println("Starting the graphical user interface ...");
+                System.out.println("graphical user interface not available.");
+                System.out.println("Please read help to continue in the commandline mode");
+            } else {
 
-            if (!commandLineArgs.hasOption("db")) {
-                System.out.println("please specify the database");
-                System.exit(0);
-            }
-            if (!commandLineArgs.hasOption("mode")) {
-                System.out.println("please specify mode");
-                System.exit(0);
-            }
-            if (!commandLineArgs.hasOption("type")) {
-                System.out.println("please specify type");
-                System.out.println("--type = [single|paired]");
-                System.exit(0);
-            }
-            int mode = Integer.parseInt(commandLineArgs.getOptionValue("mode"));
-            switch (mode) {
-                case 1: {
-                    if (!commandLineArgs.hasOption("input")) {
-                        System.out.println("please specify the inputfile");
-                        System.exit(0);
-                    }
-                    break;
-                }
-                case 2: {
-                    if (!commandLineArgs.hasOption("condA")) {
-                        System.out.println("please specify the condition A");
-                        System.exit(0);
-                    }
-                    break;
-
-                }
-                case 3: {
-                    if (!commandLineArgs.hasOption("condB")) {
-                        System.out.println("please specify the condition B");
-                        System.exit(0);
-                    }
-                    break;
-                }
-                default: {
-                    System.out.println("unknown mode");
+                if (!commandLineArgs.hasOption("db")) {
+                    System.out.println("please specify the database");
                     System.exit(0);
                 }
-                break;
+                if (!commandLineArgs.hasOption("mode")) {
+                    System.out.println("please specify mode");
+                    System.exit(0);
+                }
+                if (!commandLineArgs.hasOption("type")) {
+                    System.out.println("please specify type");
+                    System.out.println("--type = [single|paired]");
+                    System.exit(0);
+                }
+                int mode = Integer.parseInt(commandLineArgs.getOptionValue("mode"));
+                switch (mode) {
+                    case 1: {
+                        if (!commandLineArgs.hasOption("input")) {
+                            System.out.println("please specify the inputfile");
+                            System.exit(0);
+                        }
+                        break;
+                    }
+                    case 2: {
+                        if (!commandLineArgs.hasOption("condA")) {
+                            System.out.println("please specify the condition A");
+                            System.exit(0);
+                        }
+                        break;
+
+                    }
+                    case 3: {
+                        if (!commandLineArgs.hasOption("condB")) {
+                            System.out.println("please specify the condition B");
+                            System.exit(0);
+                        }
+                        break;
+                    }
+                    default: {
+                        System.out.println("unknown mode");
+                        System.exit(0);
+                    }
+                    break;
+                }
             }
 
         } catch (ParseException ex) {

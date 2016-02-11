@@ -14,11 +14,11 @@ import org.apache.commons.cli.CommandLine;
  *
  * @author elmarce
  */
-public class AppLauncher {
+public class ToolAsCL {
 
     private String[] args;
 
-    public AppLauncher(String[] args) {
+    public ToolAsCL(String[] args) {
         this.args = args;
     }
 
@@ -50,7 +50,7 @@ public class AppLauncher {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(AppLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ToolAsCL.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
