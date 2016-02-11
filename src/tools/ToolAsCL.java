@@ -5,7 +5,7 @@
  */
 package tools;
 
-import cli.CommandLineOption;
+import dataModel.InputDataModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
@@ -16,33 +16,33 @@ import org.apache.commons.cli.CommandLine;
  */
 public class ToolAsCL {
 
-    private String[] args;
+    //private String[] args;
+    private final InputDataModel IDM;
 
-    public ToolAsCL(String[] args) {
-        this.args = args;
+    public ToolAsCL(InputDataModel idm) {
+        this.IDM = idm;
     }
 
     public void runAsCLTool() {
-        //Options options = CommandLineOption.getCLOptions();
         try {
-            if (CommandLineOption.checkCLArgument(this.args)) {
-                CommandLine commandLineArgs = CommandLineOption.commandLineArgs;
+            if (IDM.getCommandLineArgs() != null) {
+                CommandLine commandLineArgs = IDM.getCommandLineArgs();
                 int mode = Integer.parseInt(commandLineArgs.getOptionValue("mode"));
                 switch (mode) {
                     case 1: {
-                        
+
                         break;
                     }
-                    case 2: { 
-                        
+                    case 2: {
+
                         break;
                     }
                     case 3: {
-                        
+
                         break;
                     }
                     default: {
-                        
+
                         System.out.println("unknown mode");
                         System.exit(0);
                     }
@@ -53,9 +53,4 @@ public class ToolAsCL {
             Logger.getLogger(ToolAsCL.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public void runAsGUI() {
-
-    }
-
 }
