@@ -6,14 +6,16 @@
 package fileParser;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import tools.CommandExecutor;
+import tools.Params;
 
 /**
  *
@@ -22,19 +24,58 @@ import java.util.Map;
 public class SamfileParser {
 
     public static void main(String[] args) {
-        Date start = new Date();
+
+        File file = new File("/mnt/fungen/db05/bouelm/Master/Java/fw_92_R1_A_BEDB.sam");
+        parseSamFileWithPerl(file.getAbsolutePath());
+    }
+
+    public static void getReadCountFromFile(String fileName) {
+        Map<String, Integer> hash = new HashMap();
+        Path file = Paths.get(fileName);
+        Charset charset = Charset.forName("US-ASCII");
+        try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                if (line.equals("GENE	READ-COUNT") || line.startsWith("GENE")) {
+                    continue;
+                }
+                String[] fields = line.split("\\s+");
+                String gene = fields[0];
+                hash.put(gene, Integer.parseInt(fields[1]));
+            }
+        } catch (IOException x) {
+            System.err.format("IOException: %s%n", x);
+            System.exit(0);
+        }
+
+    }
+
+    /**
+     * parses a samfile using a perl-Script
+     * @param samfile 
+     */
+    public static void parseSamFileWithPerl(String samfile) {
+        File file = new File(samfile);
+        String path_to_perlScript = Params.ROOT_DIR + "/src/fileParser";
+        String command = "perl " + path_to_perlScript + "/basicSamFileParser.pl -i " + samfile;
+        CommandExecutor.executeCommand(command);
+        getReadCountFromFile(file.getParent() + "/results/ReadCountPerGen.txt");
+    }
+
+    /**
+     * 
+     * @param fileName 
+     */
+    public static void parseSamFileSimple(String fileName) {
+        //refactoring needed
 
         Map<String, Integer> hash = new HashMap();
-        Path file = Paths.get("/home/benji/Dokumente/Master/s1/fw_91_R1_A_BEDB.sam");
-        //Path file = Paths.get("/home/benji/Dokumente/Master/s1/results/outputDataModel.txt");
+        Path file = Paths.get(fileName);
         Charset charset = Charset.forName("US-ASCII");
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line = null;
             int count = 0;
             while ((line = reader.readLine()) != null) {
-                if (line.equals("GENE	KO-GROUP	EC-NUMBER	KO-PATHWAY	EC-PATHWAY	EDTD	SCC	ReadLength")) {
-                    continue;
-                }
                 if (line.equals("@")) {
                     continue;
                 }
@@ -43,16 +84,7 @@ public class SamfileParser {
                     continue;
                 }
                 String gene = fields[2];
-//				if (!hash.containsKey(gene)) {
-//					hash.put(gene, 1);
-//				}
-                hash.put(gene, hash.getOrDefault(gene, 0) + 1);//super !!!
-//				if (hash.containsKey(gene)) {
-//					int currentValue = hash.get(gene)+1;
-//					hash.replace(gene, currentValue);
-//					//hash.put(gene, currentValue);
-//				}
-                //System.out.println(gene);
+                hash.put(gene, hash.getOrDefault(gene, 0) + 1);
             }
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
@@ -62,13 +94,5 @@ public class SamfileParser {
             System.out.println(key + "\t" + hash.get(key));
         }
         System.out.println("hash-size = " + hash.size());
-        Date end = new Date();
-        System.out.println("time = " + ((end.getTime() - start.getTime())) + "ms");
-
     }
-
-    public static void readSamFile() {
-
-    }
-
 }
