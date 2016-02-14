@@ -25,7 +25,7 @@ public class SamfileParser {
 
     public static void main(String[] args) {
 
-        File file = new File("/mnt/fungen/db05/bouelm/Master/Java/fw_92_R1_A_BEDB.sam");
+        File file = new File(Params.TEST_SAMFILE);
         parseSamFileWithPerl(file.getAbsolutePath());
     }
 
@@ -59,7 +59,7 @@ public class SamfileParser {
         String path_to_perlScript = Params.ROOT_DIR + "/src/fileParser";
         String command = "perl " + path_to_perlScript + "/basicSamFileParser.pl -i " + samfile;
         CommandExecutor.executeCommand(command);
-        getReadCountFromFile(file.getParent() + "/results/ReadCountPerGen.txt");
+        //getReadCountFromFile(file.getParent() + "/results/ReadCountPerGen.txt");
     }
 
     /**

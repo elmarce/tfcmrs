@@ -13,6 +13,7 @@ use Bio::SeqIO;
 use Hash::Merge qw( merge );
 use Cwd;
 use Getopt::Long;
+use JSON::Create 'create_json';
 
 #===============================================================================
 my (%opt);
@@ -46,7 +47,7 @@ sub parseSam{
      }
     my $OUTPUTDIRNAME = "$inputFileDir/results";
     
-    my(%Hit_count, %GENES_READCOUNT, %GENES_SIGNAL, %SPECIES_READCOUNT, %SPECIES_GENES_READS);
+    my(%Hit_count, %GENES_READCOUNT, %GENES_SIGNAL, %SPECIES_READCOUNT, %SPECIES_GENES_READS, %GENE_Obj, @GENE_Obj_List);
     if ($samfile !~/.sam$/) {
         print "*FATAL* wrong file extension:\n";
         print "a .sam file is expected\n";
@@ -103,10 +104,44 @@ sub parseSam{
     }
     
     close(SAM);
+    my $i = 1;
     foreach my $gene(sort{$GENES_SIGNAL{$b} <=> $GENES_SIGNAL{$a}} keys %GENES_SIGNAL ){
+        $GENE_Obj{readCount}        = $GENES_READCOUNT{$gene};
+        $GENE_Obj{signal}           = $GENES_SIGNAL{$gene};
+        $GENE_Obj{name}             = $gene;
+        my @temp_arr                = split(/\:/, $gene);
+        my $orgCode                 = $temp_arr[0];
+        $GENE_Obj{organismCode}     = $orgCode;# the organism code in the KEGG-Database
+        $GENE_Obj{description}      = "null";
+        $GENE_Obj{koGroup}          = "{null}";
+        $GENE_Obj{ecNumber}         = "{null}";
+        $GENE_Obj{koPathway}        = "{null}";
+        $GENE_Obj{ecPathway}        = "{null}";
+        
+        my $json_obj = create_json(\%GENE_Obj);
+        
+        push(@GENE_Obj_List, $json_obj);
+        %GENE_Obj = ();
         print OUT"$gene\t$GENES_READCOUNT{$gene}\t$GENES_SIGNAL{$gene}\n";
+        $i++;
     }
-    
-    
     close(OUT);
+    
+    #my $JSON_Obj =  create_json (\@GENE_Obj_List);
+    open(JSON, ">", "$OUTPUTDIRNAME/Gene.json") or die "$!";
+     #print JSON"$JSON_Obj,\n";
+    print JSON"[\n\n";
+    my $obj_count = 0;
+    foreach my $obj(@GENE_Obj_List){
+         print JSON"$obj,\n";
+         print JSON"\n";
+         if ($obj_count >= $#GENE_Obj_List) {
+            print JSON"$obj\n";
+            print JSON"\n";
+         }
+         $obj_count++;  
+    }
+    print JSON"]\n\n";
+   
+    close(JSON);
 }

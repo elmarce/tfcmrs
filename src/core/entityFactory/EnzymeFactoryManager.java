@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,6 +60,11 @@ public class EnzymeFactoryManager implements EntityFactoryManager<Enzyme> {
         }
 
         return ko_emzyme;
+    }
+
+    @Override
+    public List<Enzyme> getEntitiesAsList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

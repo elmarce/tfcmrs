@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 public class Gene {
    private String name;
-   private String orgCode;
+   private String organismCode;
    private String description;
    private KOGroup koGroup;
    private String dnaSequence;
@@ -33,12 +33,12 @@ public class Gene {
         this.name = name;
     }
 
-    public String getOrgCode() {
-        return orgCode;
+    public String getOrganismCode() {
+        return organismCode;
     }
 
-    public void setOrgCode(String orgCode) {
-        this.orgCode = orgCode;
+    public void setOrganismCode(String organismCode) {
+        this.organismCode = organismCode;
     }
 
     public String getDescription() {
@@ -108,7 +108,7 @@ public class Gene {
 
     @Override
     public String toString() {
-        return "Gene{" + "name=" + name + ", orgCode=" + orgCode + ", description=" + description  + '}';
+        return "Gene{" + "name=" + name + ", orgCode=" + organismCode + ", description=" + description  + '}';
     }
     
     

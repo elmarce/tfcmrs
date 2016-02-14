@@ -5,6 +5,7 @@
  */
 package core.entityFactory;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,4 +14,5 @@ import java.util.Map;
  */
 public interface EntityFactoryManager<T> {
   public Map<String, T>  getEntities();
+  public List<T> getEntitiesAsList();
 }

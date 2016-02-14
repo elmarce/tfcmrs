@@ -8,6 +8,8 @@ package core.ko;
 import core.ec.EnzymeClass;
 import core.gene.Gene;
 import core.pathway.Pathway;
+import geneSet.GeneSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +17,7 @@ import java.util.Objects;
  *
  * @author elmarce
  */
-public class KOGroup {
+public class KOGroup extends GeneSet{
     private String ko_number;
     private String name;
     private String description;
@@ -24,7 +26,8 @@ public class KOGroup {
     private EnzymeClass enzymeClass;
 
     public KOGroup() {
-        
+        super();
+        genes = new ArrayList<>();
     }
     
     public String getKo_number() {

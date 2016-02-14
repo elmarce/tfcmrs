@@ -6,6 +6,7 @@
 package core.entityFactory;
 
 import core.gene.Gene;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -22,8 +23,17 @@ public class GeneFactory implements EntityFactory<Gene> {
     public Gene createEntity(String name) {
         Gene gene = new Gene();
         gene.setName(name);
-        gene.setOrgCode(name.split(":")[0]);
+        gene.setOrganismCode(name.split(":")[0]);
         
+        return gene;
+    }
+    public Gene createEntity(JSONObject obj) {
+        Gene gene = new Gene();
+        gene.setName(obj.get("name").toString());
+        gene.setOrganismCode(obj.get("organismCode").toString());
+        gene.setSignal(Double.parseDouble(obj.get("signal").toString()));
+        gene.setReadCount(Integer.parseInt(obj.get("readCount").toString()));
+
         return gene;
     }
 
