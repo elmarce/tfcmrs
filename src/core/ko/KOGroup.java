@@ -37,7 +37,7 @@ public class KOGroup extends GeneSet{
     public void setKo_number(String ko_number) {
         this.ko_number = ko_number;
     }
-
+/**
     public String getName() {
         return name;
     }
@@ -69,7 +69,7 @@ public class KOGroup extends GeneSet{
     public void setGenes(List<Gene> genes) {
         this.genes = genes;
     }
-
+**/
     @Override
     public int hashCode() {
         int hash = 7;
@@ -92,10 +92,10 @@ public class KOGroup extends GeneSet{
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "KOGroup{" + "ko_number=" + ko_number + ", name=" + name + ", description=" + description + '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "KOGroup{" + "ko_number=" + ko_number + ", name=" + name + ", description=" + description + '}';
+//    }
     
    public void setEnzymeClass(EnzymeClass ec){
        this.enzymeClass = ec;

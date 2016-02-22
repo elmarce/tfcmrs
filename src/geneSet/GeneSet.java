@@ -22,10 +22,12 @@ public abstract class GeneSet {
     private String description;
     private String name;
     private String identifier;
+    private int size;
 
     public GeneSet() {
         genes = new ArrayList<>();
         subSets = new ArrayList<>();
+        this.size = 0;
     }
 
     public List<GeneSet> getSubSets() {
@@ -88,12 +90,18 @@ public abstract class GeneSet {
        // try {
             if (!this.genes.contains(gene)) {
                 this.genes.add(gene);
+                size++;
             }
 //        } catch (NullPointerException e) {
 //            System.out.println(""+e.getMessage());
 //        }
 
     }
+
+    public int getSize() {
+        return size;
+    }
+    
 
     public void removeGene(Gene gene) {
         if (this.genes.contains(gene)) {

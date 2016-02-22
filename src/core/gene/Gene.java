@@ -20,6 +20,7 @@ public class Gene {
    private String dnaSequence;
    private double signal;
    private int readCount;
+   private String koNumber;
    
    public Gene(){
        
@@ -56,6 +57,15 @@ public class Gene {
     public void setKoGroup(KOGroup koGroup) {
         this.koGroup = koGroup;
     }
+
+    public String getKoNumber() {
+        return koNumber;
+    }
+
+    public void setKoNumber(String koNumber) {
+        this.koNumber = koNumber;
+    }
+    
 
     
     
