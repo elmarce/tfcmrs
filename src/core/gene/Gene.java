@@ -5,18 +5,18 @@
  */
 package core.gene;
 
-import core.ko.KOGroup;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author elmarce
  */
-public class Gene {
+public class Gene implements Serializable{
    private String name;
    private String organismCode;
    private String description;
-   private KOGroup koGroup;
+   //private KOGroup koGroup;
    private String dnaSequence;
    private double signal;
    private int readCount;
@@ -50,13 +50,13 @@ public class Gene {
         this.description = description;
     }
 
-    public KOGroup getKoGroup() {
-        return koGroup;
-    }
+//    public KOGroup getKoGroup() {
+//        return koGroup;
+//    }
 
-    public void setKoGroup(KOGroup koGroup) {
-        this.koGroup = koGroup;
-    }
+//    public void setKoGroup(KOGroup koGroup) {
+//        this.koGroup = koGroup;
+//    }
 
     public String getKoNumber() {
         return koNumber;
