@@ -6,14 +6,15 @@
 package core.entityFactory;
 
 import core.gene.Gene;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,8 +41,9 @@ public class GeneFactoryManager extends Thread implements EntityFactoryManager<G
     }
 
     public static void main(String[] args) {
+        createGeneDB2();
         String fileName = "/media/benji/Volume1/tests/inSilicoTest2/condA/s1/condA_Sample1.sam";
-        retrieveObject();
+        //retrieveObject("AllGeneDB2.binary");
 
     }
 
@@ -81,6 +83,7 @@ public class GeneFactoryManager extends Thread implements EntityFactoryManager<G
         Path path = Paths.get(Params.GENE_LIST);
         try {
             RandomAccessFile DATABASE = new RandomAccessFile("GENEDB.binary", "rw");
+            //OutputStream out = new Output
 
             try (Stream<String> genes = Files.lines(path, StandardCharsets.UTF_8)) {
 //                File DBFile = new File("AllGeneDB.binary");
@@ -105,6 +108,40 @@ public class GeneFactoryManager extends Thread implements EntityFactoryManager<G
 //        } catch (IOException ex) {
 //            Logger.getLogger(GeneFactoryManager.class.getName()).log(Level.SEVERE, null, ex);
 //        }
+    }
+
+    public static void createGeneDB2() {
+        Path path = Paths.get(Params.GENE_LIST);
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get("AllGeneDB2.binary")));
+
+            Charset charset = Charset.forName("US-ASCII");
+            try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
+                String line = null;
+                int count = 0;
+                while ((line = reader.readLine()) != null) {
+                    count++;
+                    Gene gene = createGeneObject(line);
+                    out.writeObject(gene);
+                    gene = null;
+                    if(count >= 10000){
+                        count = 0;
+                        try{
+                          Thread.sleep(1000);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(GeneFactoryManager.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            } catch (IOException x) {
+                System.err.format("IOException: %s%n", x);
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GeneFactoryManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GeneFactoryManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static Gene createGeneObject(String line) {
@@ -132,37 +169,26 @@ public class GeneFactoryManager extends Thread implements EntityFactoryManager<G
         }
     }
 
-    public static void retrieveObject() {
-
+    public static void saveGene2(Gene gene, ObjectOutputStream out) {
         try {
-            File file = new File("AllGeneDB.binary");
-            long fileSize = file.length();
-            long totalBytesRead = 0;
-            long mappedOffset = 0;
-            long maxToMapAtATime = 1024 * 1024 * 1024;
-            long mappedSize = Math.min(fileSize, maxToMapAtATime);
-
-            RandomAccessFile DATABASE = new RandomAccessFile(file, "r");
-            FileChannel fileChannel = DATABASE.getChannel();
-
-            while (totalBytesRead < fileSize) {
-//                System.err.println("mappedOffset: " + mappedOffset + "; mappedSize: " + mappedSize);
-//                System.err.println("fileSize: " + fileSize + "; totalBytesRead: " + totalBytesRead);
-                MappedByteBuffer mappedBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, mappedOffset, mappedSize);
-                for (int i = 0; i < mappedBuffer.limit(); i++) {
-                   // System.out.print((char) mappedBuffer.get()); //Print the content of file
-                }
-                totalBytesRead = mappedBuffer.limit();
-                
-                mappedOffset += mappedSize;
-                mappedSize = Math.min(fileSize - totalBytesRead, maxToMapAtATime);
-
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GeneFactoryManager.class.getName()).log(Level.SEVERE, null, ex);
+            //ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get("AllGeneDB2.binary")));
+            out.writeObject(gene);
         } catch (IOException ex) {
             Logger.getLogger(GeneFactoryManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    public static void retrieveObject(String fileName) {
+
+        //File file = new File("AllGeneDB.binary");
+        try {
+            ObjectInputStream in = new ObjectInputStream(Files.newInputStream(Paths.get(fileName)));
+            Gene gene = (Gene) in.readObject();
+            System.out.println(gene.toString());
+            Gene gene2 = (Gene)in.readObject();
+            System.out.println(gene2.toString());
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(GeneFactoryManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
